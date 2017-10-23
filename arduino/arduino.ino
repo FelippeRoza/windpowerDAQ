@@ -23,12 +23,14 @@ void setup() {
   pinMode(A5, INPUT);
 
   // Init Serial
-  Serial.begin(115200);
+  Serial.begin(115200);  
+  setPwm(0);
+}// end setup
 
+void setPwm(int value){
   output = map(input, 0, 100, 0, 400);
   analogWrite(pin_out, output);
-
-}// end setup
+}
 
 void send_serial(char type, int analog){
   output = analog*5.0/1023.0;
@@ -60,6 +62,13 @@ void loop() {
       send_serial( 'v', analogRead(A3) );
       send_serial( 'v', analogRead(A5) );
 
+    }
+    if(signal == 'c'){
+      Serial.println("Insira o valor");
+      while(Serial.available() == 0){}
+      input = Serial.parseInt();
+      setPwm(input);
+      Serial.println(input);
     }
   }
 }
